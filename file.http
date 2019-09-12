@@ -1,0 +1,36 @@
+
+# POST http://localhost:5000/users/register HTTP/1.1
+# content-type: application/json
+
+# {
+#     "first_name": "test23",
+#     "last_name": "test2",
+#     "email": "test23@test.com",
+#     "password": "test2"
+# }
+
+# POST http://localhost:5000/users/login HTTP/1.1
+# content-type: application/json
+
+# {
+#     "email": "test@test.com",
+#     "password": "test"
+# }
+
+POST http://localhost:5000/users/register HTTP/1.1
+content-type: application/json
+
+{
+    "avatar": "a.jpg",
+    "name": "test3",
+    "email": "test3@test3.com",
+    "password": "test3"
+}
+
+# POST http://localhost:5000/users/login HTTP/1.1
+# content-type: application/json
+
+# {
+#     "name": "test3",
+#     "password": "test3"
+# }
