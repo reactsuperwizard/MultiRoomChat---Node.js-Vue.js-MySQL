@@ -151,13 +151,13 @@ users.post("/register", (req, res) => {
 
 users.put("/register", upload.single('avatar'), (req, res) => {
     console.log(req.file);
-    if (!req.file) 
-        return res.status(400).json({error: 'No files were uploaded'})
     const today = new Date()
     const userData = {
         name : req.body.name,
-        password : req.body.password,
-        avatar: req.file.path,
+        age : req.body.age,
+        sex : req.body.sex,
+        location : req.body.location,
+        bio : req.body.bio,
         create_time : today
     }
     User.findOne({
@@ -168,9 +168,15 @@ users.put("/register", upload.single('avatar'), (req, res) => {
     .then(user => {
         if (user) {
             console.log('updating')
-            bcrypt.hash(req.body.password, 10, (err, hash) => {
-                userData.password = hash
-
+            // bcrypt.hash(req.body.password, 10, (err, hash) => {
+            //     userData.password = hash
+                console.log(user['avatar'])
+                if (req.file) {
+                    userData['avatar'] = req.file.filename
+                } else if (user['avatar'] == 'male.jpg' || user['avatar'] == 'female.jpg' || user['avatar'] == 'default.jpg') {
+                    console.log('no file choosen')
+                    userData['avatar'] = (userData['sex']!='null'?userData['sex']:'default')+'.jpg'
+                }
                 User.update(userData, {where: {email: req.body.email}} )
                     .then(user => {
                         console.log('updated');
@@ -193,11 +199,12 @@ users.put("/register", upload.single('avatar'), (req, res) => {
                         console.log('updating failed')
                         res.send('error: ' + err)
                     })
-            })
-        } else {
-            console.log('no details for this user')
-            res.json({error: 'no details for this user'})
-        }
+            }
+            // )
+        // } else {
+        //     console.log('no details for this user')
+        //     res.json({error: 'no details for this user'})
+        // }
     })
     .catch(err => {
         console.log('no user for this email')

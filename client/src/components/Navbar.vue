@@ -16,6 +16,9 @@
                 <router-link class="nav-link" to="/profile">Profile</router-link>
                 </li>
                 <li v-if="auth=='loggedin' || token!=null || token!=undefined" class="nav-item">
+                <router-link class="nav-link" to="/chatroom">Chatroom</router-link>
+                </li>
+                <li v-if="auth=='loggedin' || token!=null || token!=undefined" class="nav-item">
                 <a class="nav-link" href="" v-on:click="logout">Logout</a>
                 </li>
             </ul>
