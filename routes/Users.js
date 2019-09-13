@@ -87,7 +87,7 @@ const multer = require('multer')
 
 const storage = multer.diskStorage({
     destination: function(req, file, cb) {
-        cb(null, './public/uploads/');
+        cb(null, './client/static/public/avatar');
     },
     filename: function(req, file, cb) {
         cb(null,  file.originalname);
@@ -115,16 +115,12 @@ users.use(cors())
 
 process.env.SECRET_KEY = 'secret'
 
-users.post("/register", upload.single('profile'), (req, res) => {
-    console.log(req.file);
-    if (!req.file) 
-        return res.status(400).json({error: 'No files were uploaded'})
+users.post("/register", (req, res) => {
     const today = new Date()
     const userData = {
         name : req.body.name,
         email : req.body.email,
         password : req.body.password,
-        avatar: req.file.path,
         create_time : today
     }
     User.findOne({
@@ -153,6 +149,62 @@ users.post("/register", upload.single('profile'), (req, res) => {
     })
 })
 
+users.put("/register", upload.single('avatar'), (req, res) => {
+    console.log(req.file);
+    if (!req.file) 
+        return res.status(400).json({error: 'No files were uploaded'})
+    const today = new Date()
+    const userData = {
+        name : req.body.name,
+        password : req.body.password,
+        avatar: req.file.path,
+        create_time : today
+    }
+    User.findOne({
+        where: {
+            email: req.body.email
+        }
+    })
+    .then(user => {
+        if (user) {
+            console.log('updating')
+            bcrypt.hash(req.body.password, 10, (err, hash) => {
+                userData.password = hash
+
+                User.update(userData, {where: {email: req.body.email}} )
+                    .then(user => {
+                        console.log('updated');
+                        User.findOne({
+                            where: {
+                                email: req.body.email
+                            }
+                        })
+                        .then(user => {
+                            let token = jwt.sign(user.dataValues, process.env.SECRET_KEY, {
+                                expiresIn: 1440
+                            })
+                            res.send(token)
+                        })
+                        .catch(e => {
+                            console.log('updating failed')
+                        })
+                    })
+                    .catch(err => {
+                        console.log('updating failed')
+                        res.send('error: ' + err)
+                    })
+            })
+        } else {
+            console.log('no details for this user')
+            res.json({error: 'no details for this user'})
+        }
+    })
+    .catch(err => {
+        console.log('no user for this email')
+        res.send( 'error: ' + err)
+    })
+})
+
 users.post("/login", (req, res) => {
     User.findOne({
         where: {
@@ -162,6 +214,7 @@ users.post("/login", (req, res) => {
     .then(user => {
         if (user) {
             if (bcrypt.compareSync(req.body.password, user.password)) {
+                console.log(user.dataValues);
                 let token = jwt.sign(user.dataValues, process.env.SECRET_KEY, {
                     expiresIn: 1440
                 })

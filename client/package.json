@@ -20,6 +20,7 @@
     "jwt-decode": "^2.2.0",
     "popper.js": "^1.15.0",
     "vue": "^2.5.2",
+    "vue-avatar": "^2.1.8",
     "vue-router": "^3.0.1",
     "vuetify": "^2.0.17"
   },

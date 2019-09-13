@@ -2,12 +2,8 @@
     <div class="container">
         <div class="row">
             <div class="col-md-6 mt-5 mx-auto">
-                <form v-on:submit.prevent = "register" method="post"  enctype="multipart/form-data">
+                <form v-on:submit.prevent = "register">
                     <h1 class="h3 mb-3 font-weight-normal">Register</h1>
-                    <div class="form-group">
-                        <label for="profile">Profile Image</label>
-                        <input type="file" id="profile" ref="profile" class="form-control" v-on:change="handleFileUpload()"/>
-                    </div>
                     <div class="form-group">
                         <label for="name">Name</label>
                         <input type="text" v-model = "name" class="form-control" name="name" placeholder="Enter Name">
@@ -38,29 +34,18 @@ export default {
         return {
             name: '',
             email: '',
-            password: '',
-            profile: ''
+            password: ''
         }
     },
 
     methods: {
-        handleFileUpload () {
-            this.profile = this.$refs.profile.files[0]
-        },
         register () {
-            let formData = new FormData()
-            formData.append('name', this.name)
-            formData.append('email', this.email)
-            formData.append('password', this.password)
-            formData.append('profile', this.profile)
-
             axios.post('./users/register',
-                formData, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                    }
-                }
-            ).then(res => {
+            {
+                name: this.name,
+                email: this.email,
+                password: this.password
+            }).then(res => {
                 this.name = ''
                 this.email = ''
                 this.password = ''
