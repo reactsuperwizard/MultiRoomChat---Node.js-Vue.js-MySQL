@@ -5,6 +5,8 @@ import Login from '@/components/Login'
 import Register from '@/components/Register'
 import Profile from '@/components/Profile'
 import Chatroom from '@/components/Chatroom'
+import Forgotpassword from '@/components/Forgotpassword'
+import Resetpassword from '@/components/Resetpassword'
 
 Vue.use(Router)
 
@@ -34,6 +36,16 @@ export default new Router({
       path: '/chatroom',
       name: 'Chatroom',
       component: Chatroom
+    },
+    {
+      path: '/forgot_password',
+      name: 'Forgotpassword',
+      component: Forgotpassword
+    },
+    {
+      path: '/resetpassword',
+      name: 'Resetpassword',
+      component: Resetpassword
     }
   ]
 })

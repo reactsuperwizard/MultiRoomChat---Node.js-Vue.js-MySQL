@@ -44,6 +44,10 @@
                             <input type="text" v-model = "name" class="form-control" name="name" placeholder="Enter Name">
                         </div>
                         <div class="form-group">
+                            <label for="password">Password</label>
+                            <input type="text" v-model = "password" class="form-control" name="password" placeholder="Enter Password">
+                        </div>
+                        <div class="form-group">
                             <label for="age">How Old are you?</label>
                             <select class="form-control" v-model = "age" name="age" id="age">
                                 <option v-for="ageOp in 20 " :value="ageOp" v-bind:key = "ageOp">{{ageOp}}</option>
@@ -113,10 +117,13 @@ export default {
             formData.append('location', this.location)
             formData.append('bio', this.bio)
             formData.append('avatar', this.avatar)
+            formData.append('password', this.password)
 
+            console.log(localStorage.usertoken)
             axios.put('./users/register',
                 formData, {
                     headers: {
+                        'auth-token': localStorage.usertoken,
                         'Content-Type': 'multipart/form-data'
                     }
                 }

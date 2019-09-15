@@ -17,7 +17,7 @@
 #     "password": "test"
 # }
 
-POST http://localhost:5000/users/register HTTP/1.1
+GET http://localhost:5000/users/register HTTP/1.1
 content-type: application/json
 
 {
@@ -27,10 +27,9 @@ content-type: application/json
     "password": "test3"
 }
 
-# POST http://localhost:5000/users/login HTTP/1.1
+# POST http://localhost:5000/users/forgotpassword HTTP/1.1
 # content-type: application/json
 
 # {
-#     "name": "test3",
-#     "password": "test3"
+#     "email": "a@a.com"
 # }

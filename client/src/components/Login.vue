@@ -3,17 +3,20 @@
         <div class="row">
             <div class="col-md-6 mt-5 mx-auto">
                 <form v-on:submit.prevent = "login">
-                    <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
-                    <div class="form-group">
-                        <label for="name">Name</label>
-                        <input type="name" v-model = "name" class="form-control" name="name" placeholder="Enter Name">
+                    <div class="jumbotron">
+                        <h1 class="h3 mb-3 font-weight-normal">L o g i n</h1>
+                        <div class="form-group mt-5">
+                            <input type="name" v-model = "name" class="form-control" name="name" placeholder="Enter Name">
+                        </div>
+                        <div class="form-group mt-5">
+                            <input type="password" v-model = "password" class="form-control" name="password" placeholder="Enter Password">
+                        </div>
+                        <div class="form-group">
+                            <router-link class="nav-link text-left" to="/forgot_password">forgotten password?</router-link>
+                            <router-link class="nav-link text-left" to="/register">not registered yet?</router-link>
+                        </div>
+                        <button class="btn btn-lg btn-success btn-block mt-5" type="submit">Log me in!</button>
                     </div>
-                    <div class="form-group">
-                        <label for="password">Password</label>
-                        <input type="password" v-model = "password" class="form-control" name="password" placeholder="Enter Password">
-                    </div>
-
-                    <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
                 </form>
             </div>
         </div>

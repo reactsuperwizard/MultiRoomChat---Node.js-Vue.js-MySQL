@@ -1,0 +1,46 @@
+<template>
+    <div class="container">
+        <div class="jumbotron mt-5">
+            <div class="col-sm-8 mx-auto">
+                <form v-on:submit.prevent = "sendemail">
+                    <h1 class="text-center">Forgot password? <br></h1>
+                    <h3 class="text-center">Input your email to set password <br></h3>
+                    <div class="form-group mt-5">
+                        <input type="email" v-model = "email" class="form-control" name="email" placeholder="Enter email">
+                    </div>
+                    <button class="btn btn-lg btn-success btn-block mt-5" type="submit">Send Email</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+// import jwtDecode from 'jwt-decode'
+import axios from 'axios'
+import router from '../router'
+
+export default {
+    data () {
+        // const token = localStorage.usertoken
+        // const decoded = jwtDecode(token)
+        return {
+            email: ''
+        }
+    },
+    methods: {
+        sendemail () {
+            axios.post('./users/forgotpassword',
+            {
+                email: this.email
+            }).then(res => {
+                this.password = ''
+                router.push({ name: 'resetpassword' })
+            }).catch(err => {
+                console.log(err.response.data)
+                alert(err.response.data)
+            })
+        }
+    }
+}
+</script>
