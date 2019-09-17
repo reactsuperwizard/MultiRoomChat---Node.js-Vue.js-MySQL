@@ -37,8 +37,20 @@ export default {
                 this.password = ''
                 router.push({ name: 'resetpassword' })
             }).catch(err => {
-                console.log(err.response.data)
-                alert(err.response.data)
+                var response = err.response
+                var statusText = response.statusText
+                var errorMsg = response.data ? response.data : ''
+                // errorMsg = errorMsg.join()
+                // var str = JSON.stringify(errorMsg, null, 2)
+                console.log(errorMsg)
+                // console.log(str)
+                if (Array.isArray(errorMsg)) {
+                    errorMsg = errorMsg.join()
+                    // console.log(errorMsg)
+                }
+
+                var msg = statusText + ((errorMsg !== '') ? (' / ' + errorMsg) : (''))
+                alert(msg)
             })
         }
     }

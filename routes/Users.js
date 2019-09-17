@@ -6,6 +6,7 @@ const bcrypt = require("bcrypt")
 const multer = require('multer')
 const verify = require('./verifytoken')
 var nodemailer = require('nodemailer')
+const Sequelize = require("sequelize")
 
 require('dotenv').config();
 const storage = multer.diskStorage({
@@ -46,10 +47,11 @@ users.post("/register", async (req, res) => {
         password : req.body.password,
         create_time : today
     }
+    Sequelize.or
     User.findOne({
-        where: {
-            email: req.body.email
-        }
+        where: Sequelize.or(
+                {name: req.body.name},
+                {email: req.body.email})
     })
     .then(user => {
         if (!user) {
@@ -60,15 +62,15 @@ users.post("/register", async (req, res) => {
                         res.send(user)
                     })
                     .catch(err => {
-                        res.send('error: ' + err)
+                        res.status(400).send('User create failed with this issue ' + err)
                     })
             })
         } else {
-            res.json({error: 'User already exists'})
+            res.status(400).send('Name or Email already exists')
         }
     })
     .catch(err => {
-        res.send( 'error: ' + err)
+        res.status(400).send('Register Error')
     })
 })
 
@@ -89,17 +91,13 @@ users.put("/register",verify, upload.single('avatar'), (req, res) => {
     })
     .then(user => {
         if (user) {
-            console.log('updating')
             bcrypt.hash(req.body.password, 10, (err, hash) => {
-                console.log(req.body.password)
                 if (req.body.password != '') {
                     userData.password = hash
                 }
-                console.log(userData)
                 if (req.file) {
                     userData['avatar'] = req.file.filename
                 } else if (user['avatar'] == 'male.jpg' || user['avatar'] == 'female.jpg' || user['avatar'] == 'default.jpg') {
-                    console.log('no file choosen')
                     userData['avatar'] = (userData['sex']!='null'?userData['sex']:'default')+'.jpg'
                 }
                 User.update(userData, {where: {email: req.body.email}} )
@@ -117,22 +115,19 @@ users.put("/register",verify, upload.single('avatar'), (req, res) => {
                             res.send(token)
                         })
                         .catch(e => {
-                            console.log('updating failed')
+                            res.status(400).send('Updated successfully but cannot get user data due to the following reason' + e)
                         })
                     })
                     .catch(err => {
-                        console.log('updating failed')
-                        res.send('error: ' + err)
+                        res.status(400).send('Update Failed due to the following reason ' + err)
                     })
             })
         } else {
-            console.log('no details for this user')
-            res.json({error: 'no details for this user'})
+            res.status(400).send('Email not found')
         }
     })
     .catch(err => {
-        console.log('no user for this email')
-        res.send( 'error: ' + err)
+        res.status(400).send('Find and Update due to the Failed following reason ' + err)
     })
 })
 
@@ -143,22 +138,20 @@ users.post("/login", (req, res) => {
         }
     })
     .then(user => {
-        if (user) {
-            if (bcrypt.compareSync(req.body.password, user.password)) {
-                let token = jwt.sign(user.dataValues, process.env.SECRET_KEY, {
-                    expiresIn: 1440
-                })
-                res.header('auth-token', token).send(token)
-                // res.send(token)
-            } else {
-                res.status(400).json({error: 'password is wrong'})
-            }
+        if (!user) {
+            return res.status(400).send('User does not exist')
+        }
+        if (bcrypt.compareSync(req.body.password, user.password)) {
+            let token = jwt.sign(user.dataValues, process.env.SECRET_KEY, {
+                expiresIn: 1440
+            })
+            res.header('auth-token', token).send(token)
         } else {
-            res.status(400).json({error: 'User does not exist'})
+            res.status(400).send('password is wrong')
         }
     })
     .catch(err => {
-        res.status(400).json({error: err})
+        res.status(400).send('Username ' + req.body.name + ' not found with this issue '+ err)
     })
 })
 
@@ -169,6 +162,9 @@ users.post("/forgotpassword", (req, res) => {
         }
     })
     .then(user => {
+        if (!user) {
+            return res.status(400).send('Email does not exist')
+        }
         let token = jwt.sign(user.dataValues, process.env.SECRET_KEY, {
             expiresIn: 1440
         })
@@ -180,41 +176,50 @@ users.post("/forgotpassword", (req, res) => {
                 user: "56e1e5f04fde20", //generated by Mailtrap
                 pass: "8f920176957222" //generated by Mailtrap
             }
-            });
-            transport.verify(function(error, success) {
+        });
+        transport.verify(function(error, success) {
             if (error) {
-                    console.log(error);
+                return res.status(400).send('mailtrap authorization failed ' + error)
             } else {
                     console.log('Server is ready to take our messages');
             }
-            });
-            var mailOptions = {
+        });
+        var mailOptions = {
             from: '"Example Team" <from@example.com>',
-            to: 'harry.potter0409@outlook.com',
+            // to: 'harry.potter0409@outlook.com',
+            to: process.env.myEmailAddress,
             subject: 'Forgot Password',
             text: 'Hello'+req.body.email, 
             html: '<b>Hey there! </b><br><a href="http://localhost:8081/#/resetpassword?token='+token+'">Please click this link</a>'
         };
         transport.sendMail(mailOptions, (error, info) => {
             if (error) {
-                return console.log(error);
+                return res.status(400).send('Cannot send email via mailtrap ' + error)
             }
             console.log('Message sent: %s', info.messageId);
         });
         const sgMail = require('@sendgrid/mail');
         sgMail.setApiKey(process.env.SENDGRID_API_KEY);
         const msg = {
-          to: 'harrypotter990409@gmail.com',
+          to: process.env.myEmailAddress,
+        //   to: 'harrypotter990409@gmail.com',
+        //   to: req.body.email,
+        //   to: req.body.email,
           from: 'test@example.com',
           subject: 'Sending with SendGrid is Fun',
           text: 'and easy to do anywhere, even with Node.js',
           html: '<b>Hey there! </b><br><a href="http://localhost:8081/#/resetpassword?token='+token+'">Please click this link</a>'
         };
-        sgMail.send(msg);
+        sgMail.send(msg ,(error, info) => {
+            if (error) {
+                return res.status(400).send('Cannot send email via sendgrid ' + error)
+            }
+            console.log('Message sent: %s', info.messageId);
+        });
     })
     .catch(err => {
         console.log('email not found')
-        res.status(400).json({'error': err})
+        res.status(400).send(err)
     })
 })
 
@@ -250,12 +255,12 @@ users.post("/resetpassword", (req, res) => {
                         })
                     })
             } else {
-                res.status(401).json({'error': err})
+                res.status(400).json({error: err})
             }
         })
     })
     .catch(err => {
-        res.status(401).json({'error': err})
+        res.status(400).json({error: err})
     })
 })
 

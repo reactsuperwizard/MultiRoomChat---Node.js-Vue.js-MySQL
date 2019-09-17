@@ -65,12 +65,17 @@ export default {
                     email: this.email,
                     password: this.password
                 }).then(res => {
+                    alert('Succesfully registered')
                     this.name = ''
                     this.email = ''
                     this.password = ''
                     router.push({name: 'Login'})
                 }).catch(err => {
-                    alert(err.response.data.error)
+                    var response = err.response
+                    var statusText = response.statusText
+                    var errorMsg = response.data ? response.data : ''
+                    var msg = statusText + ((errorMsg !== '') ? (' / ' + errorMsg) : (''))
+                    alert(msg)
                 })
             }
         }

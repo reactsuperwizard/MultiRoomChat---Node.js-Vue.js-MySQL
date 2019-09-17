@@ -128,11 +128,16 @@ export default {
                     }
                 }
             ).then(res => {
+                alert('Succesfully updated')
                 localStorage.removeItem('usertoken')
                 localStorage.setItem('usertoken', res.data)
                 router.push({ name: 'Chatroom' })
             }).catch(err => {
-                alert(err.response.data.error)
+                var response = err.response
+                var statusText = response.statusText
+                var errorMsg = response.data ? response.data : ''
+                var msg = statusText + ((errorMsg !== '') ? (' / ' + errorMsg) : (''))
+                alert(msg)
             })
         }
     }

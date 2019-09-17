@@ -1,99 +1,59 @@
-// const Sequlize = require("sequelize")
-// const db = require("../database/db")
-
-// module.exports = db.sequelize.define(
-//     'user',
-//     {
-//         id: {
-//             type: Sequlize.INTEGER,
-//             primaryKey: true,
-//             autoIncrement: true
-//         },
-//         first_name: {
-//             type: Sequlize.STRING
-//         },
-//         last_name: {
-//             type: Sequlize.STRING
-//         },
-//         email: {
-//             type: Sequlize.STRING
-//         },
-//         password: {
-//             type: Sequlize.STRING
-//         },
-//         created: {
-//             type: Sequlize.DATE,
-//             defaultValue: Sequlize.NOW
-//         }
-//     },
-//     {
-//         timestamps: false
-//     }
-// )
-
-
-
-
-
-
-
-
-const Sequlize = require("sequelize")
+const Sequelize = require("sequelize")
 const db = require("../database/db")
 
 module.exports = db.sequelize.define(
     'user_info',
     {
         id: {
-            type: Sequlize.INTEGER,
+            type: Sequelize.INTEGER,
             primaryKey: true,
             autoIncrement: true
         },
         name: {
-            type: Sequlize.STRING,
+            type: Sequelize.STRING,
             unique: true,
             allowNull: false
         },
         email: {
-            type: Sequlize.STRING,
+            type: Sequelize.STRING,
             unique: true,
             allowNull: false
         },
         socketid: {
-            type: Sequlize.STRING
+            type: Sequelize.STRING
         },
         password: {
-            type: Sequlize.STRING,
+            type: Sequelize.STRING,
             unique: true,
             allowNull: false
         },
         create_time: {
-            type: Sequlize.DATE,
-            defaultValue: Sequlize.NOW
+            type: Sequelize.DATE,
+            defaultValue: Sequelize.NOW
         },
         delete_time: {
-            type: Sequlize.DATE
+            type: Sequelize.DATE
         },
         avatar: {
-            type: Sequlize.STRING
+            type: Sequelize.STRING
         },
         age: {
-            type: Sequlize.INTEGER
+            type: Sequelize.INTEGER
         },
         sex: {
-            type: Sequlize.STRING
+            type: Sequelize.STRING
         },
         location: {
-            type: Sequlize.STRING
+            type: Sequelize.STRING
         },
         bio: {
-            type: Sequlize.STRING
+            type: Sequelize.STRING
         },
         status_active: {
-            type: Sequlize.TINYINT
+            type: Sequelize.TINYINT
         },
         status_participate: {
-            type: Sequlize.TINYINT
+            type: Sequelize.TINYINT
         }
     },
     {

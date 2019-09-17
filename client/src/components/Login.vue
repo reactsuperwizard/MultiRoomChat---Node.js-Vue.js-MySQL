@@ -50,7 +50,11 @@ export default {
                 router.push({ name: 'Profile' })
                 this.emitMethod()
             }).catch(err => {
-                alert(err.response.data.error)
+                var response = err.response
+                var statusText = response.statusText
+                var errorMsg = response.data ? response.data : ''
+                var msg = statusText + ((errorMsg !== '') ? (' / ' + errorMsg) : (''))
+                alert(msg)
             })
         },
         emitMethod () {
