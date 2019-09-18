@@ -60,7 +60,11 @@ export default {
                 this.password = ''
                 router.push({name: 'Login'})
             }).catch(err => {
-                alert(err)
+                var response = err.response
+                var statusText = response.statusText
+                var errorMsg = response.data ? response.data : ''
+                var msg = statusText + ((errorMsg !== '') ? (' / ' + errorMsg) : (''))
+                alert(msg)
             })
         }
     }

@@ -221,8 +221,8 @@ users.post("/forgotpassword", (req, res) => {
 })
 
 
-// users.post("/resetpassword", verify ,(req, res) => {
-users.post("/resetpassword", (req, res) => {
+users.post("/resetpassword", verify ,(req, res) => {
+// users.post("/resetpassword", (req, res) => {
     const userData = {
     }
     console.log(req.body)
