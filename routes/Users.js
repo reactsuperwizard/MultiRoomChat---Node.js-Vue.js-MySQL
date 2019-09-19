@@ -59,7 +59,7 @@ users.post("/register", async (req, res) => {
                 userData.password = hash
                 User.create(userData)
                     .then(user => {
-                        res.send('Successfully registered')
+                        res.send(user)
                     })
                     .catch(err => {
                         res.status(400).send('User create failed with this issue ' + err)
