@@ -46,6 +46,7 @@ export default {
                 password: this.password
             }).then(res => {
                 localStorage.setItem('usertoken', res.data)
+                localStorage.setItem('auth', 'loggedin')
                 this.flashMessage.success({
                     title: 'Successfully Login',
                     message: 'Please wait while redirecting to Profile page',

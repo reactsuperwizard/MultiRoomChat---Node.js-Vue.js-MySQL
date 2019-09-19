@@ -12,6 +12,13 @@ Vue.use(FlashMessage)
 
 Vue.use(Router)
 
+function guard (to, from, next) {
+  if (localStorage.auth !== 'loggedin') {
+    next()
+  } else {
+    next('/profile')
+  }
+}
 export default new Router({
   routes: [
     {
@@ -21,11 +28,13 @@ export default new Router({
     },
     {
       path: '/login',
+      beforeEnter: guard,
       name: 'Login',
       component: Login
     },
     {
       path: '/register',
+      beforeEnter: guard,
       name: 'Register',
       component: Register
     },

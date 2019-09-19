@@ -43,6 +43,7 @@ export default {
 
     methods: {
         logout () {
+            localStorage.removeItem('auth')
             localStorage.removeItem('usertoken')
         }
     },
