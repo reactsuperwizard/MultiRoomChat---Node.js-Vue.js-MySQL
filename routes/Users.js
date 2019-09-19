@@ -91,7 +91,8 @@ users.put("/register",verify, upload.single('avatar'), (req, res) => {
     .then(user => {
         if (user) {
             bcrypt.hash(req.body.password, 10, (err, hash) => {
-                if (req.body.password != '') {
+                if (req.body.password) {
+                    console.log(req.body.password)
                     userData.password = hash
                 }
                 if (req.file) {
