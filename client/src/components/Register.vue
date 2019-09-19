@@ -65,8 +65,8 @@ export default {
                         blockClass: 'custom-block-class'
                     })
                     // console.log(res.data.name)
-                    // setTimeout(() => router.push({name: 'Login', params: {name: res.data.name}}), 2000)
-                    setTimeout(() => router.push({name: 'Login'}), 2000)
+                    setTimeout(() => router.push({name: 'Login', params: {name: res.data.name}}), 2000)
+                    // setTimeout(() => router.push({name: 'Login'}), 2000)
                 }).catch(err => {
                     var response = err.response
                     var statusText = response.statusText

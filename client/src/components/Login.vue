@@ -33,10 +33,14 @@ import EventBus from './EventBus'
 export default {
     data () {
         return {
+            routeName: this.$route.params.name,
             name: '',
             password: ''
         }
     },
+        mounted () {
+            this.name = this.routeName
+        },
 
     methods: {
         login () {
