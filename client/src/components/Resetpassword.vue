@@ -1,5 +1,6 @@
 <template>
     <div class="container">
+        <FlashMessage></FlashMessage>
         <div class="row">
             <div class="col-md-6 mt-5 mx-auto">
                 <form v-on:submit.prevent = "passwordreset" method="post" enctype="multipart/form-data">
@@ -64,7 +65,12 @@ export default {
                 var statusText = response.statusText
                 var errorMsg = response.data ? response.data : ''
                 var msg = statusText + ((errorMsg !== '') ? (' / ' + errorMsg) : (''))
-                alert(msg)
+                this.flashMessage.error({
+                    title: 'Password reset failed',
+                    message: msg,
+                    time: 4000,
+                    blockClass: 'custom-block-class'
+                })
             })
         }
     }

@@ -1,15 +1,10 @@
 <template>
     <div class="container">
+        <FlashMessage></FlashMessage>
         <div class="row">
             <div class="col-md-6 mt-5 mx-auto">
                 <form v-on:submit.prevent = "register">
                     <div class="jumbotron">
-                        <p v-if="errors.length">
-                            <b>Please correct the following error(s):</b>
-                            <ul>
-                                <li v-for="error in errors" v-bind:key="error">{{ error }}</li>
-                            </ul>
-                        </p>
                         <h1 class="h3 mb-3 font-weight-normal">Register</h1>
                         <h6 class="">Please register in order to use the chatroom<br>Make sure that you use a valid email address.</h6>
                         <div class="form-group mt-5">
@@ -34,7 +29,6 @@
 
 import axios from 'axios'
 import router from '../router'
-
 export default {
     data () {
         return {
@@ -49,15 +43,14 @@ export default {
         register (e) {
             this.errors = []
             if (!this.name) {
-                this.errors.push('Name required.')
+                this.errors.push('Name required')
             }
             if (!this.email) {
-                this.errors.push('Email required.')
+                this.errors.push('Email required')
             }
             if (!this.password) {
-                this.errors.push('Password required.')
+                this.errors.push('Password required')
             }
-
             if (!this.errors.length) {
                 axios.post('./users/register',
                 {
@@ -65,17 +58,31 @@ export default {
                     email: this.email,
                     password: this.password
                 }).then(res => {
-                    alert('Succesfully registered')
-                    this.name = ''
-                    this.email = ''
-                    this.password = ''
-                    router.push({name: 'Login'})
+                    this.flashMessage.success({
+                        title: 'Successfully Registered',
+                        message: 'Please wait while redirecting to login page',
+                        time: 2000,
+                        blockClass: 'custom-block-class'
+                    })
+                    setTimeout(() => router.push({name: 'Login'}), 2000)
                 }).catch(err => {
                     var response = err.response
                     var statusText = response.statusText
                     var errorMsg = response.data ? response.data : ''
                     var msg = statusText + ((errorMsg !== '') ? (' / ' + errorMsg) : (''))
-                    alert(msg)
+                    this.flashMessage.error({
+                        title: 'Register Failed',
+                        message: msg,
+                        time: 4000,
+                        blockClass: 'custom-block-class'
+                    })
+                })
+            } else {
+                this.flashMessage.error({
+                    title: 'Not valid data',
+                    message: Array.join(this.errors),
+                    time: 4000,
+                    blockClass: 'custom-block-class'
                 })
             }
         }

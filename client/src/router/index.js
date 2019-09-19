@@ -7,6 +7,8 @@ import Profile from '@/components/Profile'
 import Chatroom from '@/components/Chatroom'
 import Forgotpassword from '@/components/Forgotpassword'
 import Resetpassword from '@/components/Resetpassword'
+import FlashMessage from '@smartweb/vue-flash-message'
+Vue.use(FlashMessage)
 
 Vue.use(Router)
 

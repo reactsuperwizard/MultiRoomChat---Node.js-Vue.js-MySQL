@@ -9,6 +9,7 @@
 </style>
 <template>
     <div class="container">
+        <FlashMessage></FlashMessage>
         <div class="jumbotron mt-5">
             <div class="col-sm-8 mx-auto">
                 <h1 class="text-center">Make your profile</h1>
@@ -40,17 +41,9 @@
 
                         </div>
                         <div class="form-group">
-                            <label for="name">Name</label>
-                            <input type="text" v-model = "name" class="form-control" name="name" placeholder="Enter Name">
-                        </div>
-                        <div class="form-group">
-                            <label for="password">Password</label>
-                            <input type="text" v-model = "password" class="form-control" name="password" placeholder="Enter Password">
-                        </div>
-                        <div class="form-group">
                             <label for="age">How Old are you?</label>
                             <select class="form-control" v-model = "age" name="age" id="age">
-                                <option v-for="ageOp in 20 " :value="ageOp" v-bind:key = "ageOp">{{ageOp}}</option>
+                                <option v-for="ageOp in 30 " :value="ageOp" v-bind:key = "ageOp+15">{{ageOp+13}}</option>
                             </select>
                         </div>
 
@@ -110,14 +103,12 @@ export default {
         },
         Update () {
             let formData = new FormData()
-            formData.append('name', this.name)
             formData.append('email', this.email)
             formData.append('age', this.age)
             formData.append('sex', this.sex)
             formData.append('location', this.location)
             formData.append('bio', this.bio)
             formData.append('avatar', this.avatar)
-            formData.append('password', this.password)
 
             console.log(localStorage.usertoken)
             axios.put('./users/register',
@@ -128,7 +119,6 @@ export default {
                     }
                 }
             ).then(res => {
-                alert('Succesfully updated')
                 localStorage.removeItem('usertoken')
                 localStorage.setItem('usertoken', res.data)
                 router.push({ name: 'Chatroom' })
@@ -137,7 +127,12 @@ export default {
                 var statusText = response.statusText
                 var errorMsg = response.data ? response.data : ''
                 var msg = statusText + ((errorMsg !== '') ? (' / ' + errorMsg) : (''))
-                alert(msg)
+                this.flashMessage.error({
+                    title: 'Profile save failed',
+                    message: msg,
+                    time: 4000,
+                    blockClass: 'custom-block-class'
+                })
             })
         }
     }

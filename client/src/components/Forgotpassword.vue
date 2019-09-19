@@ -1,5 +1,6 @@
 <template>
     <div class="container">
+        <FlashMessage></FlashMessage>
         <div class="jumbotron mt-5">
             <div class="col-sm-8 mx-auto">
                 <form v-on:submit.prevent = "sendemail">
@@ -18,7 +19,7 @@
 <script>
 // import jwtDecode from 'jwt-decode'
 import axios from 'axios'
-import router from '../router'
+// import router from '../router'
 
 export default {
     data () {
@@ -30,12 +31,22 @@ export default {
     },
     methods: {
         sendemail () {
+            this.flashMessage.info({
+                title: 'Email sending',
+                message: this.email,
+                time: 4000,
+                blockClass: 'custom-block-class'
+            })
             axios.post('./users/forgotpassword',
             {
                 email: this.email
             }).then(res => {
-                this.password = ''
-                router.push({ name: 'resetpassword' })
+                this.flashMessage.success({
+                    title: 'Congratulations',
+                    message: res.data,
+                    time: 2000,
+                    blockClass: 'custom-block-class'
+                })
             }).catch(err => {
                 var response = err.response
                 var statusText = response.statusText
@@ -50,7 +61,12 @@ export default {
                 }
 
                 var msg = statusText + ((errorMsg !== '') ? (' / ' + errorMsg) : (''))
-                alert(msg)
+                this.flashMessage.error({
+                    title: 'Email sending Failed',
+                    message: msg,
+                    time: 4000,
+                    blockClass: 'custom-block-class'
+                })
             })
         }
     }

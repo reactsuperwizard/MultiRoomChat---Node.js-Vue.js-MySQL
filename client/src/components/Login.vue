@@ -1,5 +1,6 @@
 <template>
     <div class="container">
+        <FlashMessage></FlashMessage>
         <div class="row">
             <div class="col-md-6 mt-5 mx-auto">
                 <form v-on:submit.prevent = "login">
@@ -45,16 +46,25 @@ export default {
                 password: this.password
             }).then(res => {
                 localStorage.setItem('usertoken', res.data)
-                this.name = ''
-                this.password = ''
-                router.push({ name: 'Profile' })
+                this.flashMessage.success({
+                    title: 'Successfully Login',
+                    message: 'Please wait while redirecting to Profile page',
+                    time: 2000,
+                    blockClass: 'custom-block-class'
+                })
+                setTimeout(() => router.push({name: 'Profile'}), 2000)
                 this.emitMethod()
             }).catch(err => {
                 var response = err.response
                 var statusText = response.statusText
                 var errorMsg = response.data ? response.data : ''
                 var msg = statusText + ((errorMsg !== '') ? (' / ' + errorMsg) : (''))
-                alert(msg)
+                this.flashMessage.error({
+                    title: 'Login Failed',
+                    message: msg,
+                    time: 4000,
+                    blockClass: 'custom-block-class'
+                })
             })
         },
         emitMethod () {

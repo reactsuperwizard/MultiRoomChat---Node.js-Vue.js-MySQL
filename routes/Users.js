@@ -59,7 +59,7 @@ users.post("/register", async (req, res) => {
                 userData.password = hash
                 User.create(userData)
                     .then(user => {
-                        res.send(user)
+                        res.send('Successfully registered')
                     })
                     .catch(err => {
                         res.status(400).send('User create failed with this issue ' + err)
@@ -77,7 +77,6 @@ users.post("/register", async (req, res) => {
 users.put("/register",verify, upload.single('avatar'), (req, res) => {
     const today = new Date()
     const userData = {
-        name : req.body.name,
         age : req.body.age,
         sex : req.body.sex,
         location : req.body.location,
@@ -194,25 +193,28 @@ users.post("/forgotpassword", (req, res) => {
         };
         transport.sendMail(mailOptions, (error, info) => {
             if (error) {
-                return res.status(400).send('Cannot send email via mailtrap ' + error)
+                // return res.status(400).send('Cannot send email via mailtrap ' + error)
+                console.log('Mailtrap sent failed')
             }
-            console.log('Message sent: %s', info.messageId);
+            console.log('Mailtrap sent successfully')
         });
-        // const sgMail = require('@sendgrid/mail');
-        // sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-        // const msg = {
-        //   to: process.env.myEmailAddress,
-        //   from: 'test@example.com',
-        //   subject: 'Sending with SendGrid is Fun',
-        //   text: 'and easy to do anywhere, even with Node.js',
-        //   html: '<b>Hey there! </b><br><a href="http://localhost:8081/#/resetpassword?token='+token+'">Please click this link</a>'
-        // };
-        // sgMail.send(msg ,(error, info) => {
-        //     if (error) {
-        //         return res.status(400).send('Cannot send email via sendgrid ' + error)
-        //     }
-        //     console.log('Message sent: %s', info.messageId);
-        // });
+        const sgMail = require('@sendgrid/mail');
+        sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+        const msg = {
+          to: process.env.myEmailAddress,
+          from: 'test@example.com',
+          subject: 'Sending with SendGrid is Fun',
+          text: 'and easy to do anywhere, even with Node.js',
+          html: '<b>Hey there! </b><br><a href="http://localhost:8081/#/resetpassword?token='+token+'">Please click this link</a>'
+        };
+        sgMail.send(msg ,(error, info) => {
+            if (error) {
+                return res.status(400).send('Cannot send email via sendgrid ' + error)
+            }
+            console.log('Sendgrid Message sent: %s', info.messageId);
+            res.send('Email sent successfully')
+        });
+
     })
     .catch(err => {
         console.log('email not found')

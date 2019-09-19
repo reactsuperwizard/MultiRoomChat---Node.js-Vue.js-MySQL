@@ -17,7 +17,7 @@
 #     "password": "test"
 # }
 
-GET http://localhost:5000/users/register HTTP/1.1
+GET http://localhost:5000/users/ HTTP/1.1
 content-type: application/json
 
 {
