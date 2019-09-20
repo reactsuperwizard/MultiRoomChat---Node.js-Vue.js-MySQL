@@ -33,14 +33,16 @@ import EventBus from './EventBus'
 export default {
     data () {
         return {
-            routeName: this.$route.params.name,
             name: '',
             password: ''
         }
     },
-        mounted () {
-            this.name = this.routeName
-        },
+    mounted () {
+        this.name = localStorage.regName
+        this.password = localStorage.regPass
+        localStorage.removeItem('regName')
+        localStorage.removeItem('regPass')
+    },
 
     methods: {
         login () {
