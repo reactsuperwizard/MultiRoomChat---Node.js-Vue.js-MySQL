@@ -12,7 +12,7 @@
     "@hapi/joi": "^16.0.1",
     "@sendgrid/mail": "^6.4.0",
     "async": "^3.1.0",
-    "bcrypt": "3.0.0",
+    "bcrypt": "5.0.0",
     "body-parser": "^1.17.2",
     "cors": "^2.8.4",
     "dotenv": "^8.1.0",
