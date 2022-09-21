@@ -24,7 +24,7 @@
     "vue-avatar": "^2.1.8",
     "vue-flash-message": "^0.7.2",
     "vue-router": "^3.0.1",
-    "vuetify": "^2.0.17"
+    "vuetify": "^2.6.10"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",
